@@ -1,0 +1,34 @@
+version: '3.2'
+
+services:
+  # mosquitto mqtt server
+  mqtt-server:
+    build:
+      context: mqtt-server
+    container_name: mqtt-server
+    ports:
+    - "1883:1883"
+    volumes:
+    - ./mqtt-server:/app    
+
+  # mosquitto mqtt client tools
+  mqtt-client:
+    build:
+      context: mqtt-client
+    container_name: mqtt-client
+    volumes:
+    - ./mqtt-client:/app 
+
+  # intersystems iris interoperability with MQTT adapters
+  iris:
+    build:
+      context: iris
+    container_name: iris
+    ports:
+    - "51773:51773"
+    - "52773:52773"
+    volumes:
+    - ./iris:/app
+
+
+  

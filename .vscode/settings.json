@@ -1,0 +1,14 @@
+{
+    "objectscript.export.folder": "iris/src",
+    "objectscript.conn": {
+        "active": false,
+        "username": "superuser",
+        "password": "SYS",
+        "docker-compose": {
+            "service": "iris"
+        },
+        "ns": "USER",
+        "port": 52773,
+        "host": "localhost"
+    }
+}
