@@ -1,9 +1,9 @@
 Class MQTT.Msg.DummyDataReq Extends Ens.Request
 {
 
-Property uid As %String;
+Property uid As %String(MAXLEN = "");
 
-Property val As %String;
+Property val As %String(MAXLEN = "");
 
 Storage Default
 {

@@ -29,7 +29,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </call>
 <sync name='Sync' calls='Call DummyData' type='all' xpos='200' ypos='450' />
 <transform name='DummyDataRsp To MQTT' class='MQTT.DT.DummyRspToMqtt' source='context.dummyRsp' target='context.mqttProcessed' xpos='200' ypos='550' />
-<call name='MQTT Operation' target='MQTT.BO.MQTTOperation' async='1' xpos='200' ypos='650' >
+<call name='MQTT Operation' target='EnsLib.MQTT.Operation.Passthrough' async='1' xpos='200' ypos='650' >
 <request type='EnsLib.MQTT.Message' >
 <assign property="callrequest" value="context.mqttProcessed" action="set" />
 </request>

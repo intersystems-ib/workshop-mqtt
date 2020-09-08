@@ -1,7 +1,7 @@
 Class MQTT.Msg.DummyDataRsp Extends Ens.Request
 {
 
-Property response As %String;
+Property response As %String(MAXLEN = "");
 
 Storage Default
 {

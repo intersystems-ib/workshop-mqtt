@@ -22,6 +22,8 @@ $ docker-compose build
 
 # Examples
 
+<img src="img/workshop-mqtt-diagram.png">
+
 ## (a). MQTT interoperability Production
 * Run the containers we will use in the workshop:
 ```
@@ -33,19 +35,25 @@ docker-compose up
 
 
 ## (b). Publish a message using MQTT operations
-* In a VS Code Terminal window, type the following to *subscribe* to `t.processed` topic in the `mqtt-client` container:
+* In a VS Code Terminal window, type the following to *subscribe* to `iris/out/#` topic in the `mqtt-client` container:
 ```console
 docker exec -it mqtt-client bash
-# mosquitto_sub -h mqtt-server -t "t.processed"
+# mosquitto_sub -h mqtt-server -t "iris/out/#"
 ``` 
-* In the [MQTT.Prod](http://localhost:52773/csp/user/EnsPortal.ProductionConfig.zen?PRODUCTION=MQTT.Prod) interoperability production, click on the pre-built passthrough `EnsLib.MQTT.Operation.Passthrough` operation. Go through the *Settings* tab and check the MQTT settings.
-* Go to *Actions tab > Test*, enter some text in the *StringValue* field. You don't need to specify the topic (it will use the topic specified in the Settings).
+* In the [MQTT.Prod](http://localhost:52773/csp/user/EnsPortal.ProductionConfig.zen?PRODUCTION=MQTT.Prod) interoperability production, click on the pre-built passthrough `EnsLib.MQTT.Operation.Passthrough` operation. Go through the *Settings* tab. Pay attention to `ClientId`, `KeepAlive`, `Url`, `ReplyCodeActions`, `RetryInterval`, `FailureTimeout`.
+* Go to *Actions tab > Test*, enter some text in the *StringValue* field, and use `iris/out/passthrough` as topic.
 * Check the resulting Visual Trace.
-* Check that in your Terminal window where you subscribed to `t.processed` topic you received the message.
+* Check that in your Terminal window where you subscribed to `iris/out/#` topic you received the message.
+* In your `docker-compose up` terminal, try to find a message like:
+```
+mqtt-server    | 1599551296: New client connected from 192.168.48.4 as iris-passthrough-bo (p2, c1, k15).
+mqtt-server    | 1599551319: Client iris-passthrough-bo has exceeded timeout, disconnecting.
+```
+* Send another test message from `EnsLib.MQTT.Operation.Passthrough` operation. Why is the trace different this time?
 * Back in [MQTT.Prod](http://localhost:52773/csp/user/EnsPortal.ProductionConfig.zen?PRODUCTION=MQTT.Prod), click on the (+) icon on Business Operation and add `MQTT.BO.MQTTOperation`.
 * In VS Code, have a look at the [MQTTOperation](iris/src/MQTT/BO/MQTTOperation.cls) Business Operation. It is a simple Business Operation that uses MQTT outbound adapter.
 * Configure the MQTT Settings of `MQTT.BO.MQTTOperation` properly (see `EnsLib.MQTT.Operation.Passthrough`).
-* Test the `MQTT.BO.MQTTOperation` in the production.
+* Test the `MQTT.BO.MQTTOperation` in the production using `iris/out/test` topic.
 
 ## (c). Add a Business Process into the mix
 * Let's simulate a Business Process asking for some information to Business Operation, and then transforming the result into a MQTT message.
@@ -54,14 +62,14 @@ docker exec -it mqtt-client bash
 * Test the `MQTT.BP.Process` Business Process in the production and see what happens.
 
 ## (d). Add a MQTT Business Service to receive messages
-* Now we will listen to MQTT messages published to `t.event` topic.
+* Now we will listen to MQTT messages published to `iris/in/#` topic.
 * You could use a straight forward pre-built passthrough service: `EnsLib.MQTT.Service.PassThrough`, however we will add a service that uses MQTT adapters too to see them in action.
 * Add a new Business Service, choose `MQTT.BS.Service`. Have a look at the code in [MQTT.BS.Service](iris/src/MQTT/BS/MQTTService.cls).
-* Configure the *MQTT Settings* to connect to your `mqtt-broker` listening to `t.event` topic. 
-* Now, open a new VS Code Terminal and type the following to publish a message into `t.event` topic using the mqtt-client container:
+* Configure the *MQTT Settings* to connect to your `mqtt-broker` listening to `iris/in/#` topic. 
+* Now, open a new VS Code Terminal and type the following to publish a message into `iris/in/test` topic using the mqtt-client container:
 ```console
 docker exec -it mqtt-client bash
-# mosquitto_pub -h mqtt-server -t "t.event" -m "sample message!"
+# mosquitto_pub -h mqtt-server -t "iris/in/test" -m "sample message!"
 ``` 
 
 
