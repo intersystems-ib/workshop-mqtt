@@ -14,6 +14,7 @@ XData ProductionDefinition
     <Setting Target="Adapter" Name="KeepAlive">15</Setting>
     <Setting Target="Host" Name="ReplyCodeActions">E=R</Setting>
     <Setting Target="Host" Name="RetryInterval">1</Setting>
+    <Setting Target="Adapter" Name="ClientID">iris-mqtt-passthrough</Setting>
   </Item>
 </Production>
 }
